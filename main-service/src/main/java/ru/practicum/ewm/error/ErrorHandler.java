@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import ru.practicum.ewm.exception.ConflictDataException;
 import ru.practicum.ewm.exception.DuplicateException;
 import ru.practicum.ewm.exception.NotFoundException;
 
@@ -27,6 +28,14 @@ public class ErrorHandler {
     public ErrorResponse handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
         String message = e.getMessage();
         log.debug("Получен статус 400 BAD_REQUEST {}", message, e);
+        return new ErrorResponse(message);
+    }
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(ConflictDataException.class)
+    public ErrorResponse handleConflictDataException(ConflictDataException e) {
+        String message = e.getMessage();
+        log.debug("Получен статус 409 CONFLICT {}", message, e);
         return new ErrorResponse(message);
     }
 
